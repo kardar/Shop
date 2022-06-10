@@ -67,6 +67,9 @@
         </nav>
         <h1>Manage Users </h1>
         <a th:href="@{/users/new}">Creat New User</a>
+        <div th:if="${message != null}" class="alert alert-success text-center">
+            [[${message}]]
+        </div>
     </div>
            <div>
                <table class="table table-responsive-xl">

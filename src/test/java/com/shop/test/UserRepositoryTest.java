@@ -76,10 +76,13 @@ public class UserRepositoryTest {
         userRavi.getRoles().remove(roleEditor);
         userRavi.addRole(roleSalesPerson);
     }
+    /*
     @Test
     public void testDeleteUserById(){
         Integer userId = 2;
         repo.deleteById(userId);
 
     }
+
+     */
 }
