@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
-
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.slim.js"
+            integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
+            crossorigin="anonymous"></script>
 
 </head>
 <body>
@@ -67,7 +70,8 @@
         </nav>
         <h1>Manage Users | Create New User </h1>
     </div>
-        <form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}">
+        <form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}"
+        onsubmit="return checkUniqueEmail(this);">
             <div class="border border-secondary rounded p-3">
                 <div class="form-group row">
                     <label class="col-sm-4 col-form-label">E-mail: </label>
@@ -132,6 +136,19 @@
             window.location = "[[@{/users}]]";
         });
     });
+
+    function checkUniqueEmail(form){
+        url = "[[@{/users/check_email}]]";
+        userEmail = $("#email").val();
+        csrfValue = $("input[name = '_csrf']").val();
+        params = {email: userEmail,_csrf: csrfValue};
+        $.post(url,params,function (response) {
+            alert("response from server : "+response);
+        });
+
+        return false;
+    }
+
 </script>
 
 </body>

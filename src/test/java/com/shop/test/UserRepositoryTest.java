@@ -76,7 +76,7 @@ public class UserRepositoryTest {
         userRavi.getRoles().remove(roleEditor);
         userRavi.addRole(roleSalesPerson);
     }
-    /*
+
     @Test
     public void testDeleteUserById(){
         Integer userId = 2;
@@ -84,5 +84,10 @@ public class UserRepositoryTest {
 
     }
 
-     */
+    @Test
+    public void testUserByEmail(){
+        String email = "shankar@gmail.com";
+      User user =   repo.getUserByEmail(email);
+      assertThat(user).isNotNull();
+    }
 }
