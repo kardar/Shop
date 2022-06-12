@@ -4,16 +4,21 @@
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" >
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
     <title> Home- shop Admin</title>
-    <!-- <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">-->
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.css}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.css}"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    <script
-            src="https://code.jquery.com/jquery-3.6.0.slim.js"
-            integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY="
-            crossorigin="anonymous"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 
 </head>
 <body>
@@ -71,7 +76,7 @@
         <h1>Manage Users | Create New User </h1>
     </div>
         <form th:action="@{/users/save}" method="post" style="max-width: 700px; margin: 0 auto" th:object="${user}"
-        onsubmit="return checkUniqueEmail(this);">
+             onsubmit="return checkUniqueEmail(this)">
             <div class="border border-secondary rounded p-3">
                 <div class="form-group row">
                     <label class="col-sm-4 col-form-label">E-mail: </label>
@@ -125,6 +130,26 @@
         </form>
 
 </div>
+            <div class="modal fade text-center " id="modalDialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalTitle"> Warning</h4>
+                            <button class="close" type="button" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <span id="modalBody"></span>
+                        </div>
+
+                        <div class="modal-footer" >
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
 
 <div  class="text-center">
     <p>Grocery Services Control Panel - Copyright &copy; Grocery Services</p>
@@ -138,14 +163,18 @@
     });
 
     function checkUniqueEmail(form){
-        url = "[[@{/users/check_email}]]";
-        userEmail = $("#email").val();
-        csrfValue = $("input[name = '_csrf']").val();
-        params = {email: userEmail,_csrf: csrfValue};
-        $.post(url,params,function (response) {
-            alert("response from server : "+response);
-        });
+       const url = "[[@{/users/check_email}]]";
+        const  userEmail = $("#email").val();
+        const  csrfValue = $("input[name = '_csrf']").val();
+        const  params = {email: userEmail,_csrf: csrfValue};
 
+         $.post(url,params,function (response){
+            if (response == 'Ok'){
+                form.submit();
+            }else if(response == 'Duplicated'){
+                alert(userEmail+": Already exists");
+            }
+        })
         return false;
     }
 
