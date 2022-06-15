@@ -31,6 +31,7 @@ public class UserController {
         List<Role> listRole = userService.listRole();
         model.addAttribute("user",user);
         model.addAttribute("listRole",listRole);
+        model.addAttribute("pageTitle", "Create New User");
         return "user_form";
     }
     @PostMapping("/users/save")
@@ -41,11 +42,16 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/users/edit/{edit}")
+    @GetMapping("/users/edit/{id}")
     public String editUser(@PathVariable(name = "id")Integer id, RedirectAttributes redirectAttributes,Model model){
+        List<Role> listRole = userService.listRole();
+
         try {
             User user = userService.get(id);
             model.addAttribute("user",user);
+            model.addAttribute("pageTitle", "Edit User (ID :"+id+")");
+            model.addAttribute("listRole",listRole);
+
             return "user_form";
         }catch (UserNotFoundException ex){
             redirectAttributes.addFlashAttribute("message", ex.getMessage());
@@ -53,4 +59,22 @@ public class UserController {
         }
 
     }
-}
+
+    @GetMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable(name = "id")Integer id,
+                           RedirectAttributes redirectAttributes,
+                           Model model) {
+        try {
+             userService.delete(id);
+             redirectAttributes.addFlashAttribute("message", "The user ID"+id+"has been Deleted");
+            return "user_form";
+        }catch (UserNotFoundException ex){
+            redirectAttributes.addFlashAttribute("message", ex.getMessage());
+        }
+        return "redirect:/users";
+    }
+
+
+
+    }
+
