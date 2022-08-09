@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+         xmlns:sec="https://www.thymleaf.org/thymleaf-extras-springsecurity5" >
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" >
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
     <title> Home- shop Admin</title>
-   <!-- <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">-->
-    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.css}"></script>
-    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.css}"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/style.css}">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
 
 </head>
@@ -17,6 +19,10 @@
 <div class="container-fluid">
 
     <div>
+        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+            <input type="submit" />
+
+        </form>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <a class="navbar-brand" th:href="@{/}">
                 <img th:src="@{/images/logo.png}" />
@@ -26,46 +32,93 @@
             </button>
             <div class="collapse navbar-collapse" id="topNavbar">
                 <ul class="navbar-nav">
-                    <li class= "nav-item">
+                    <li class= "nav-item" sec:authorize="hasAuthority('Admin')">
                          <a class="nav-link" th:href="@{/users}">Users</a>
                     </li>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
                     <li class="nav-item">
                          <a class="nav-link" th:href="@{/categories}">Categories</a>
                     </li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/brands}">Brands</a>
                     </li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor','Salesperson','Shipper')">
                     <li class="nav-item">
                       <a class="nav-link" th:href="@{/products}">Products</a>
                     </li>
+                    </th:block>
+
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/questions}">Questions</a>
+                        </li>
+                    </th:block>
+
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Assistant')">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/reviews}">Reviews</a>
+                        </li>
+                    </th:block>
+
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
                     <li class="nav-item">
                          <a class="nav-link" th:href="@{/customers}">Customers</a>
                     </li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
                     <li class="nav-item">
                           <a class="nav-link" th:href="@{/shipping}">Shipping</a>
                     </li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson')">
                     <li class="nav-item">
                          <a class="nav-link" th:href="@{/salesReport}">Sales Report</a>
                     </li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Salesperson','Shipper')">
                     <li class="nav-item">
                           <a class="nav-link" th:href="@{/orders}">orders</a>
                     </li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
                     <li class="nav-item">
                          <a class="nav-link" th:href="@{/articles}">Articles</a>
                     </li>
+                    </th:block>
+                    <th:block sec:authorize="hasAnyAuthority('Admin','Editor')">
                     <li class="nav-item">
                          <a class="nav-link" th:href="@{/menu}">Menu</a>
                     </li>
-                    <li class="nav-item">
+                    </th:block>
+                    <li class="nav-item"  sec:authorize="hasAuthority('Admin')">
                         <a class="nav-link" th:href="@{/settings}">Settings</a>
                     </li>
+                    <li>
+                        <span class="fas fa-user fa-2x icon-silver"></span>
+                    </li>
+                    <li class="nav-item dropdown">
+                         <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                            th:href="@{/account}"
+                            sec:authentication="principal.username"></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" id="logout-link" href="">Logout</a>
 
+                        </div>
+                    </li>
                 </ul>
 
             </div>
 
         </nav>
-        <h1>Admin control Panel </h1>
+        <div>
+            <h1>Admin control Panel </h1>
+            Welcome
+
+        </div>
+
     </div>
 </div>
 
@@ -73,7 +126,29 @@
 <div>
     <p>Grocery Services Control Panel - Copyright &copy; Grocery Services</p>
 </div>
+             <script type="text/javascript">
+                 $(document).ready(function () {
+                   $("#logout-link").on("click", function (e) {
+                       e.preventDefault();
+                       document.logoutForm.submit();
+                   })
+                     customizeDropDown();
+                 });
 
+                 function customizeDropDown(){
+                     $(".navbar .dropdown").hover(function () {
+                             $(this).find('.dropdown-menu').first().stop(true,true).delay(250).slideDown();
+                         },
+                         function () {
+                             $(this).find('.dropdown-menu').first().stop(true,true).delay(100).slideUp();
+
+                         }
+                     )
+                       $(".dropdown > a").click(function () {
+                           location.href = this.href;
+                       })
+                 }
+             </script>
 
 </body>
 </html>

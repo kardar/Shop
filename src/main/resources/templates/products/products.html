@@ -4,9 +4,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" >
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
-    <title> Home- shop Admin</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <title> Manage Products</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
@@ -16,12 +14,11 @@
 </head>
 <body>
 <div class="container-fluid">
+    <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
+        <input type="submit" />
 
+    </form>
     <div>
-        <form th:action="@{/logout}" method="post" th:hidden="true" name="logoutForm">
-            <input type="submit" />
-
-        </form>
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
             <a class="navbar-brand" th:href="@{/}">
                 <img th:src="@{/images/logo.png}" />
@@ -111,137 +108,143 @@
             </div>
 
         </nav>
-        <h1>Manage Users </h1>
-        <a th:href="@{/users/new}">Creat New User</a>
+
+        <h1>Manage Products </h1>
+        <a th:href="@{/products/new}" class="fas fa-folder-plus fa-2x icon-dark mr-2"></a>
         &nbsp; | &nbsp;
-        <a th:href="@{/users/export/csv}">Export to CSV</a>
+        <a th:href="@{/products/export/csv}">Export to CSV</a>
         <div th:if="${message != null}" class="alert alert-success text-center">
             [[${message}]]
         </div>
+
     </div>
-           <div>
-               <table class="table table-responsive-xl">
-                   <thead class="thead-dark">
 
-                   <tr>
-                       <th>User ID</th>
-                       <th>Photos</th>
-                       <th>Email</th>
-                       <th>First Name </th>
-                       <th>Last Name </th>
-                       <th>Roles</th>
-                        <th>Enabled</th>
-                       <th></th>
-                   </tr>
+    <div>
+        <div class="full-details">
+            <table class="table table-bordered table-striped table-hover table-responsive-xl">
+                <thead class="thead-dark">
 
-                   </thead>
-                   <tbody>
-                  <tr th:each="user : ${listUser}">
-                      <td>[[${user.id}]]</td>
-                      <td>
-                          <span th:if="${user.photos == null}" class="fas fa-portrait fa-3x icon-dark"></span>
-                           <img th:if="${user.photos != null}" th:src="@{${user.photosImagePath}}"/>
-                      </td>
-                      <td>[[${user.email}]]</td>
-                      <td>[[${user.firstName}]]</td>
-                      <td>[[${user.lastName}]]</td>
-                      <td>[[${user.roles}]]</td>
-                      <td><a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
-                             th:href="@{'/users/'+ ${user.id}+'/enabled/false'}" title="Disable User"></a>
-                      <a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
-                         th:href="@{'/users/'+ ${user.id}+'/enabled/true'}" title="Enable User"></a></td>
+                <tr>
+                    <th>ID</th>
+                    <th>Main Image</th>
+                    <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>Category</th>
+                    <th>Enabled</th>
+                    <th>Actions</th>
+                </tr>
 
-                      <td><a class="fas fa-edit fa-2x icon-green" th:href="@{'/users/edit/'+ ${user.id}}"
-                       title="Edit this user"></a>
-                          &nbsp;
-                          <a class="fas fa-trash fa-2x icon-dark link-delete"
-                             th:href="@{'/users/delete/'+ ${user.id}}" title="Delete User" ></a></td>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${listProducts}">
+                    <td>[[${product.id}]]</td>
+                    <td>
+                         <img th:src="@{${product.mainImagePath}}" style="width: 120px" class="img-fluid">
+                    </td>
+                    <td>[[${product.name}]]</td>
+                    <td>[[${product.brand.name}]]</td>
+                    <td>[[${product.category.name}]]</td>
+                    <td><a th:if="${product.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+                           th:href="@{'/products/'+ ${product.id}+'/enabled/false'}" title="Disable"></a>
+                        <a th:if="${product.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+                           th:href="@{'/products/'+ ${product.id}+'/enabled/true'}" title="Enable"></a></td>
+                    <td>
+                        <a class="fas fa-file-alt fa-2x icon-green"
+                           th:src="@{'/products/detail/' + ${product.id}}" title="View Details"></a>
+                        &nbsp;
+                        <a class="fas fa-edit fa-2x icon-green" th:href="@{'/product/edit/'+ ${product.id}}"
+                           title="Edit"></a>
+                        &nbsp;
+                        <a class="fas fa-trash fa-2x icon-dark link-delete"
+                           th:href="@{'/products/delete/'+ ${product.id}}" title="Delete" ></a></td>
 
-
-                  </tr>
-                   </tbody>
-               </table>
-           </div>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-            <div class="text-center m-1" th:if="${totalItems > 0}">
-                <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
-            </div>
-            <div class="text-center m-1" th:unless="${totalItem > 0}">
-                <span>No user found</span>
-            </div>
+<div class="text-center m-1" th:if="${totalItems > 0}">
+    <span>Showing Category # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+</div>
+<div class="text-center m-1" th:unless="${totalItem > 0}">
+    <span>Category found</span>
+</div>
 
-          <div>
-              <nav aria-label="Page navigation  ">
-                  <ul class="pagination justify-content-center">
-                      <li class="page-item"><a class="page-link"th:href="@{/users/page/1}">First</a></li>
-                      <li class="page-item"><a class="page-link"th:href="@{'/users/page/' + ${currentPage-1}}">Previous</a></li>
-                      <li class="page-item" th:each="i : ${#numbers.sequence(1,totalPages)} ">
-                          <a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a></li>
-                      <li class="page-item"><a class="page-link" th:href="@{'/users/page/' + ${currentPage+1}}">Next</a></li>
-                      <li class="page-item"><a class="page-link" th:href="@{'/users/page/' + ${totalPages}}">Last</a></li>
+<div>
+    <!--  <nav aria-label="Page navigation  ">-->
+    <!--    <ul class="pagination justify-content-center">-->
+    <!--      <li class="page-item"><a class="page-link"th:href="@{/categories/page/1}">First</a></li>-->
+    <!--      <li class="page-item"><a class="page-link"th:href="@{'/categories/page/' + ${currentPage-1}}">Previous</a></li>-->
+    <!--      <li class="page-item" th:each="i : ${#numbers.sequence(1,totalPages)} ">-->
+    <!--        <a class="page-link" th:href="@{'/categories/page/' + ${i}}">[[${i}]]</a></li>-->
+    <!--      <li class="page-item"><a class="page-link" th:href="@{'/categories/page/' + ${currentPage+1}}">Next</a></li>-->
+    <!--      <li class="page-item"><a class="page-link" th:href="@{'/categories/page/' + ${totalPages}}">Last</a></li>-->
 
-                  </ul>
-              </nav>
-          </div>
+    <!--    </ul>-->
+    <!--  </nav>-->
+</div>
 
 
 
 <div  class="text-center">
     <p>Grocery Services Control Panel - Copyright &copy; Grocery Services</p>
 </div>
-<div class="modal fade text-center " id="confirmModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title"> Delete Confirmation</h4>
-                <button class="close" type="button" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <span id="modalBody">Are you sure you want to delete</span>
-            </div>
+<!--<div class="modal fade text-center " id="confirmModal">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--      <div class="modal-header">-->
+<!--        <h4 class="modal-title"> Delete Confirmation</h4>-->
+<!--        <button class="close" type="button" data-dismiss="modal">&times;</button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <span id="modalBody">Are you sure you want to delete</span>-->
+<!--      </div>-->
 
-            <div class="modal-footer" >
-                <a class="btn btn-success" href="">yes</a>
-                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+<!--      <div class="modal-footer" >-->
+<!--        <a class="btn btn-success" href="">yes</a>-->
+<!--        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>-->
 
-            </div>
-        </div>
+</div>
+</div>
 
-    </div>
+</div>
 
 </div>
 
 
- <script type="text/javascript">
-         $(document).ready(function () {
-         $("#logout-link").on("click", function (e) {
-             e.preventDefault();
-             document.logoutForm.submit();
-         })
-         customizeDropDown();
-     });
+<script type="text/javascript">
 
-         function customizeDropDown(){
-         $(".navbar .dropdown").hover(function () {
-                 $(this).find('.dropdown-menu').first().stop(true,true).delay(250).slideDown();
-             },
-             function () {
-                 $(this).find('.dropdown-menu').first().stop(true,true).delay(100).slideUp();
+    $(document).ready(function () {
+        $("#logout-link").on("click", function (e) {
+            e.preventDefault();
+            document.logoutForm.submit();
+        })
+        customizeDropDown();
+    });
 
-             }
-         )
-         $(".dropdown > a").click(function () {
-         location.href = this.href;
-     })
-     }
+    function customizeDropDown(){
+        $(".navbar .dropdown").hover(function () {
+                $(this).find('.dropdown-menu').first().stop(true,true).delay(250).slideDown();
+            },
+            function () {
+                $(this).find('.dropdown-menu').first().stop(true,true).delay(100).slideUp();
+
+            }
+        )
+        $(".dropdown > a").click(function () {
+            location.href = this.href;
+        })
+    }
 
 
-     // $(document).ready(function () {
-     //     $(".link-delete").on("click",function (e) {
-     //         e.preventDefault();
-     //         jQuery("#confirmModal").modal();
-     //     })
-     // })
+    // $(document).ready(function () {
+    //   $(".link-delete").on("click",function (e) {
+    //     e.preventDefault();
+    //     alert("You are going to delete a User");
+    //     jQuery("#confirmModal").modal();
+    //   })
+    // })
 </script>
 
 </body>

@@ -27,7 +27,7 @@ public class User {
     private String photos;
     private boolean isEnabled;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -122,5 +122,11 @@ public class User {
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
                 '}';
+    }
+
+    public String getPhotosImagePath(){
+        if (id == null || photos == null) return  "/images/default-image.png";
+
+        return "/user-photos/"+ this.id+"/"+this.photos;
     }
 }

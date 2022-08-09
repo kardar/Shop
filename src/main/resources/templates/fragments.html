@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div th:fragment="pagination" th:remove="tag">
+<div class="text-center m-1" th:if="${totalItems > 0}">
+  <span>Showing users # [[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+</div>
+<div class="text-center m-1" th:unless="${totalItem > 0}">
+  <span>No user found</span>
+</div>
+
+<div>
+  <nav aria-label="Page navigation  ">
+    <ul class="pagination justify-content-center">
+      <li class="page-item"><a class="page-link"th:href="@{/users/page/1}">First</a></li>
+      <li class="page-item"><a class="page-link"th:href="@{'/users/page/' + ${currentPage-1}}">Previous</a></li>
+      <li class="page-item" th:each="i : ${#numbers.sequence(1,totalPages)} ">
+        <a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a></li>
+      <li class="page-item"><a class="page-link" th:href="@{'/users/page/' + ${currentPage+1}}">Next</a></li>
+      <li class="page-item"><a class="page-link" th:href="@{'/users/page/' + ${totalPages}}">Last</a></li>
+
+    </ul>
+  </nav>
+</div>
+</div>
+
+</body>
+</html>
